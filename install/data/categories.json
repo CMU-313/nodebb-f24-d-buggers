@@ -18,13 +18,22 @@
         "order": 2
     },
     {
+        "name": "Questions & Answers",
+        "description": "Have a question for the professors or TAs about the class? Ask here!",
+        "descriptionParsed": "<p>Have a question for the professors or TAs about the class? Ask here!</p>\n",
+        "bgColor": "#A020F0",
+        "color": "#ffffff",
+        "icon" : "fa-otter",
+        "order": 3
+    },
+    {
         "name": "Blogs",
         "description": "Blog posts from individual members",
         "descriptionParsed": "<p>Blog posts from individual members</p>\n",
         "bgColor": "#86ba4b",
         "color": "#ffffff",
         "icon" : "fa-newspaper-o",
-        "order": 4
+        "order": 5
     },
     {
         "name": "Comments & Feedback",
@@ -33,6 +42,6 @@
         "bgColor": "#e95c5a",
         "color": "#ffffff",
         "icon" : "fa-question",
-        "order": 3
+        "order": 4
     }
 ]
