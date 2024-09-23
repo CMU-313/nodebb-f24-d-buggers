@@ -779,6 +779,85 @@ describe('Post\'s', () => {
 		});
 	});
 
+	// describe('Posts in Questions & Answers category', () => {
+	// 	let qaCid;
+	// 	let qaTopicData;
+	// 	let qaPostData;
+
+	// 	before(async () => {
+	// 		// Mock the categories.getCategories function
+	// 		categories.getCategories = async cids => cids.map(cid => ({
+	// 			cid: cid,
+	// 			name: cid === '3' ? 'Questions & Answers' : `Category ${cid}`,
+	// 		}));
+
+	// 		const categoriesList = await db.getSortedSetRange('categories:cid', 0, -1);
+	// 		const categoryData = await categories.getCategories(categoriesList);
+	// 		console.log('categoryData:', categoryData);
+
+	// 		const qaCategory = categoryData.find(c => c.name === 'Questions & Answers');
+	// 		if (!qaCategory) {
+	// 			throw new Error('Questions & Answers category not found in mock data');
+	// 		}
+	// 		qaCid = qaCategory.cid;
+
+	// 		qaTopicData = await topics.post({
+	// 			uid: voterUid,
+	// 			cid: qaCid,
+	// 			title: 'Test Q&A Topic',
+	// 			content: 'This is a test topic in the Q&A category',
+	// 		});
+
+	// 		qaPostData = await topics.reply({
+	// 			uid: voterUid,
+	// 			tid: qaTopicData.topicData.tid,
+	// 			content: 'This is a test reply in the Q&A category',
+	// 		});
+	// 	});
+
+	// 	it('should properly record posts in the Q&A category', async () => {
+	// 		const topicData = await topics.getTopicData(qaTopicData.topicData.tid);
+	// 		assert(topicData);
+	// 		assert.equal(topicData.cid, qaCid);
+
+	// 		const postData = await posts.getPostData(qaPostData.pid);
+	// 		assert(postData);
+	// 		assert.equal(postData.tid, qaTopicData.topicData.tid);
+
+	// 		const topicPosts = await topics.getTopicPosts(qaTopicData.topicData.tid, `tid:${qaTopicData.topicData.tid}:posts`, 0, -1, voterUid);
+	// 		console.log('Topic Posts:', JSON.stringify(topicPosts, null, 2));
+	// 		assert(Array.isArray(topicPosts));
+	// 		assert(topicPosts.length > 0, 'No posts found in the topic');
+	// 		console.log(`Number of posts found: ${topicPosts.length}`);
+	// 		console.log('Expected topic post PID:', qaTopicData.postData.pid);
+
+	// 		// Log the content and PID of all posts for debugging
+	// 		topicPosts.forEach((post, index) => {
+	// 			console.log(`Post ${index} - PID: ${post.pid}, Content: ${post.content}`);
+	// 		});
+
+	// 		// Check if the topic post exists
+	// 		const topicPost = topicPosts.find(post => post.pid === qaTopicData.postData.pid);
+	// 		if (!topicPost) {
+	// 			console.error('Topic post not found. Available PIDs:', topicPosts.map(p => p.pid));
+	// 		}
+	// 		assert(topicPost, 'Topic post not found');
+
+	// 		const expectedTopicContent = 'This is a test topic in the Q&amp;A category';
+	// 		assert(topicPost.content.includes(expectedTopicContent), `Topic post content does not match. Expected to include: "${expectedTopicContent}", Actual: "${topicPost.content}"`);
+
+	// 		// Check the content of the reply post
+	// 		const replyPost = topicPosts.find(post => post.pid === qaPostData.pid);
+	// 		assert(replyPost, 'Reply post not found');
+	// 		const expectedReplyContent = 'This is a test reply in the Q&amp;A category';
+	// 		assert(replyPost.content.includes(expectedReplyContent), `Reply post content does not match. Expected to include: "${expectedReplyContent}", Actual: "${replyPost.content}"`);
+
+	// 		// Additional checks
+	// 		assert.equal(topicPost.pid, qaTopicData.postData.pid, 'Topic post PID does not match');
+	// 		assert.equal(replyPost.pid, qaPostData.pid, 'Reply post PID does not match');
+	// 	});
+	// });
+
 	describe('socket methods', () => {
 		let pid;
 		before((done) => {
