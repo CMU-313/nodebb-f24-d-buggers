@@ -1,6 +1,5 @@
 'use strict';
 
-
 define('forum/topic/postTools', [
 	'share',
 	'navigator',
@@ -265,6 +264,11 @@ define('forum/topic/postTools', [
 
 		postContainer.on('click', '[component="post/chat"]', function () {
 			openChat($(this));
+		});
+
+		postContainer.on('click', '[component="post/endorse"]', function () {
+			const pid = getData($(this), 'data-pid');
+			PostTools.endorsePost(pid);
 		});
 	}
 
@@ -549,6 +553,17 @@ define('forum/topic/postTools', [
 			});
 		}
 	}
+
+	PostTools.endorsePost = function (pid) {
+		api.put(`/posts/${pid}/endorse`, {}).then(() => {
+			const postEl = components.get('post', 'pid', pid);
+			postEl.find('[component="post/endorse"]').addClass('hidden');
+			postEl.find('[component="post/endorsed"]').removeClass('hidden');
+			alerts.success('[[topic:post-endorsed]]');
+		}).catch((err) => {
+			alerts.error(err);
+		});
+	};
 
 	return PostTools;
 });

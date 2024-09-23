@@ -1,4 +1,3 @@
-
 .form-label {
 	font-weight: 500;
 	font-size: $font-size-sm;
@@ -48,6 +47,14 @@
 	line-height: 1.25rem;
 	> i {
 		line-height: 1.25rem;
+	}
+}
+
+// Add this new style for the endorse button
+.btn-endorse {
+	color: #28a745;
+	&:hover {
+		color: #218838;
 	}
 }
 

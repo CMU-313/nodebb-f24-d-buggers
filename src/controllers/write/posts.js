@@ -179,3 +179,15 @@ Posts.getReplies = async (req, res) => {
 
 	helpers.formatApiResponse(200, res, { replies });
 };
+
+Posts.endorse = async function (req, res) {
+	const { pid } = req.params;
+
+	try {
+		await posts.endorsePost(pid, req.uid);
+		const postData = await posts.getPostData(pid);
+		helpers.formatApiResponse(200, res, postData);
+	} catch (err) {
+		helpers.formatApiResponse(500, res, err);
+	}
+};

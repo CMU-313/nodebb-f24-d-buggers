@@ -1,4 +1,3 @@
-
 'use strict';
 
 const winston = require('winston');
@@ -12,6 +11,8 @@ const plugins = require('../plugins');
 const translator = require('../translator');
 const user = require('./index');
 const utils = require('../utils');
+const posts = require('../posts');
+const topics = require('../topics');
 
 const UserNotifications = module.exports;
 
@@ -260,4 +261,22 @@ UserNotifications.pushCount = async function (uid) {
 	const websockets = require('../socket.io');
 	const count = await UserNotifications.getUnreadCount(uid);
 	websockets.in(`uid_${uid}`).emit('event:notifications.updateCount', count);
+};
+
+UserNotifications.sendEndorsementNotification = async function (pid, endorserUid) {
+	const postData = await posts.getPostFields(pid, ['tid', 'uid']);
+	const endorserData = await user.getUserFields(endorserUid, ['username']);
+	const topicData = await topics.getTopicFields(postData.tid, ['title']);
+
+	const notifObj = await notifications.create({
+		type: 'post-endorsed',
+		bodyShort: `[[notifications:user-endorsed-your-post, ${endorserData.username}]]`,
+		bodyLong: `[[notifications:user-endorsed-your-post-in, ${endorserData.username}, ${topicData.title}]]`,
+		pid: pid,
+		path: `/post/${pid}`,
+		nid: `post:${pid}:endorse`,
+		from: endorserUid,
+	});
+
+	await notifications.push(notifObj, [postData.uid]);
 };

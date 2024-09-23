@@ -66,9 +66,10 @@ helpers.setupApiRoute = function (...args) {
 		middleware.handleMultipart,
 		...middlewares,
 	];
-
 	router[verb](name, middlewares, helpers.tryRoute(controller, (err, res) => {
-		controllerHelpers.formatApiResponse(400, res, err);
+		if (err) {
+			controllerHelpers.formatApiResponse(400, res, err);
+		}
 	}));
 };
 

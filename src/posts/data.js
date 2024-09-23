@@ -27,7 +27,7 @@ module.exports = function (Posts) {
 	};
 
 	Posts.getPostData = async function (pid) {
-		const posts = await Posts.getPostsFields([pid], []);
+		const posts = await Posts.getPostsFields([pid], ['is_endorsed']); // Include 'is_endorsed' field
 		return posts && posts.length ? posts[0] : null;
 	};
 
@@ -53,6 +53,13 @@ module.exports = function (Posts) {
 		await db.setObject(`post:${pid}`, data);
 		plugins.hooks.fire('action:post.setFields', { data: { ...data, pid } });
 	};
+
+	// New function to handle post endorsement
+	Posts.endorsePost = async function (pid, endorserUid) {
+		await Posts.setPostField(pid, 'is_endorsed', 1);
+		await db.sortedSetAdd(`uid:${endorserUid}:endorsed`, Date.now(), pid);
+		plugins.hooks.fire('action:post.endorsed', { pid: pid, uid: endorserUid });
+	};
 };
 
 function modifyPost(post, fields) {
@@ -66,6 +73,9 @@ function modifyPost(post, fields) {
 		}
 		if (post.hasOwnProperty('edited')) {
 			post.editedISO = post.edited !== 0 ? utils.toISOString(post.edited) : '';
+		}
+		if (post.hasOwnProperty('is_endorsed')) {
+			post.is_endorsed = Boolean(post.is_endorsed); // Convert to boolean
 		}
 	}
 }

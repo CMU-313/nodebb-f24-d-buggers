@@ -202,7 +202,7 @@ async function deleteOrRestoreTopicOf(command, pid, caller) {
 	// command: delete/restore
 	await apiHelpers.doTopicAction(
 		command,
-		topic.deleted ? 'event:topic_restored' : 'event:topic_deleted',
+		'event:topic_restored',
 		caller,
 		{ tids: [topic.tid], cid: topic.cid }
 	);
@@ -511,4 +511,12 @@ postsAPI.getReplies = async (caller, { pid }) => {
 	postData = await user.blocks.filter(uid, postData);
 
 	return postData;
+};
+
+postsAPI.endorse = async function (caller, data) {
+	const canEndorse = await privileges.posts.canEndorse(data.pid, caller.uid);
+	if (!canEndorse) {
+		throw new Error('[[error:no-privileges]]');
+	}
+	return await posts.endorsePost(data.pid, caller.uid);
 };
