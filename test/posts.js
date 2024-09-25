@@ -778,7 +778,6 @@ describe('Post\'s', () => {
 			done();
 		});
 	});
-
 	describe('socket methods', () => {
 		let pid;
 		before((done) => {
