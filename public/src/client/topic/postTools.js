@@ -12,7 +12,8 @@ define('forum/topic/postTools', [
 	'alerts',
 	'hooks',
 	'helpers',
-], function (share, navigator, components, translator, votes, api, bootbox, alerts, hooks, helpers) {
+	'topic/endorse' 
+], function (share, navigator, components, translator, votes, api, bootbox, alerts, hooks, helpers, endorse) {
 	const PostTools = {};
 
 	let staleReplyAnyway = false;
@@ -29,6 +30,8 @@ define('forum/topic/postTools', [
 		votes.addVoteHandler();
 
 		PostTools.updatePostCount(ajaxify.data.postcount);
+
+		endorse.init({ tid: tid });
 	};
 
 	function renderMenu() {
@@ -69,6 +72,9 @@ define('forum/topic/postTools', [
 				hooks.fire('action:post.tools.load', {
 					element: dropdownMenu,
 				});
+
+				// Add endorse button to post menu
+				PostTools.addEndorseButtonToPostMenu(postEl);
 			});
 		});
 	}
@@ -265,6 +271,11 @@ define('forum/topic/postTools', [
 
 		postContainer.on('click', '[component="post/chat"]', function () {
 			openChat($(this));
+		});
+
+		postContainer.on('click', '[component="post/endorse"]', function () {
+			const pid = getData($(this), 'data-pid');
+			endorse.toggleEndorse(pid);
 		});
 	}
 
@@ -549,6 +560,26 @@ define('forum/topic/postTools', [
 			});
 		}
 	}
+
+	PostTools.addEndorseButtonToPostMenu = function($post) {
+		const pid = $post.attr('data-pid');
+		const isEndorsed = $post.find('[component="post/endorse"]').hasClass('endorsed');
+		const endorseHtml = `
+			<li>
+				<a component="post/endorse" href="#" class="dropdown-item rounded-1 d-flex align-items-center gap-2 ${isEndorsed ? 'endorsed' : ''}" role="menuitem" data-pid="${pid}">
+					<i class="fa fa-fw fa-star${isEndorsed ? '' : '-o'} text-secondary"></i>${isEndorsed ? ' Unendorse' : ' Endorse'}
+				</a>
+			</li>
+		`;
+		$post.find('.post-menu').append(endorseHtml);
+	};
+
+	hooks.on('action:posts.loaded', function(data) {
+		data.posts.forEach(function(post) {
+			const $post = $('[data-pid="' + post.pid + '"]');
+			PostTools.addEndorseButtonToPostMenu($post);
+		});
+	});
 
 	return PostTools;
 });

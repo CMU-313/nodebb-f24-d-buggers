@@ -11,7 +11,8 @@ define('forum/topic/posts', [
 	'translator',
 	'hooks',
 	'helpers',
-], function (pagination, infinitescroll, postTools, images, navigator, components, translator, hooks, helpers) {
+	'topic/endorse' // Added endorsement module
+], function (pagination, infinitescroll, postTools, images, navigator, components, translator, hooks, helpers, endorse) {
 	const Posts = { };
 
 	Posts.signaturesShown = {};
@@ -52,6 +53,8 @@ define('forum/topic/posts', [
 		require(['forum/topic/replies'], function (replies) {
 			replies.onNewPost(data);
 		});
+
+		endorse.init({ tid: data.posts[0].tid });
 	};
 
 	function updateNavigatorLastPostTimestamp(post) {
@@ -445,6 +448,12 @@ define('forum/topic/posts', [
 			}
 		});
 	};
+
+	$(document).ready(function() {
+		if (ajaxify.data.tid) {
+			endorse.init({ tid: ajaxify.data.tid });
+		}
+	});
 
 	return Posts;
 });

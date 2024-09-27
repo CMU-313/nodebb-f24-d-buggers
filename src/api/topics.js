@@ -298,3 +298,15 @@ topicsAPI.bump = async (caller, { tid }) => {
 	await topics.markAsUnreadForAll(tid);
 	topics.pushUnreadCount(caller.uid);
 };
+
+topicsAPI.endorse = async function (caller, data) {
+	const tid = data.tid;
+	const uid = caller.uid;
+	return await Topics.tools.endorse(tid, uid);
+};
+
+topicsAPI.unendorse = async function (caller, data) {
+	const tid = data.tid;
+	const uid = caller.uid;
+	return await Topics.tools.unendorse(tid, uid);
+};
