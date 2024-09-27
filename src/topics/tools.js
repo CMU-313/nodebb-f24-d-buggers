@@ -15,6 +15,34 @@ module.exports = function (Topics) {
 	const topicTools = {};
 	Topics.tools = topicTools;
 
+	topicTools.endorse = async function (tid, uid) {
+        return await toggleEndorse(tid, uid, true);
+    };
+
+    topicTools.unendorse = async function (tid, uid) {
+        return await toggleEndorse(tid, uid, false);
+    };
+
+    async function toggleEndorse(tid, uid, endorse) {
+        const topicData = await Topics.getTopicData(tid);
+        if (!topicData) {
+            throw new Error('[[error:no-topic]]');
+        }
+
+        const canEndorse = await privileges.topics.canEndorse(tid, uid);
+        if (!canEndorse) {
+            throw new Error('[[error:no-privileges]]');
+        }
+
+        await Topics.setTopicField(tid, 'endorsed', endorse ? 1 : 0);
+        topicData.endorsed = endorse ? 1 : 0;
+        topicData.events = await Topics.events.log(tid, { type: endorse ? 'endorse' : 'unendorse', uid });
+
+        plugins.hooks.fire(`action:topic.${endorse ? 'endorse' : 'unendorse'}`, { topic: _.clone(topicData), uid });
+
+        return topicData;
+    }
+
 	topicTools.delete = async function (tid, uid) {
 		return await toggleDelete(tid, uid, true);
 	};

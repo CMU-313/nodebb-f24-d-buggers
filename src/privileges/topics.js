@@ -1,4 +1,3 @@
-
 'use strict';
 
 const _ = require('lodash');
@@ -192,4 +191,9 @@ privsTopics.canViewDeletedScheduled = function (topic, privileges = {}, viewDele
 	}
 
 	return true;
+};
+
+privsTopics.canEndorse = async function (tid, uid) {
+	const isAdminOrMod = await privsCategories.isAdminOrModByTid(tid, uid);
+	return isAdminOrMod;
 };

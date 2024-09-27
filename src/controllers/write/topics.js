@@ -207,3 +207,27 @@ Topics.bump = async (req, res) => {
 
 	helpers.formatApiResponse(200, res);
 };
+
+Topics.endorse = async (req, res) => {
+	const uid = req.user.uid;
+	const tid = req.params.tid;
+
+	try {
+		const topicData = await topics.tools.endorse(tid, uid);
+		res.status(200).json({ topic: topicData });
+	} catch (err) {
+		res.status(400).json({ error: err.message });
+	}
+};
+
+Topics.unendorse = async (req, res) => {
+	const uid = req.user.uid;
+	const tid = req.params.tid;
+
+	try {
+		const topicData = await topics.tools.unendorse(tid, uid);
+		res.status(200).json({ topic: topicData });
+	} catch (err) {
+		res.status(400).json({ error: err.message });
+	}
+};
