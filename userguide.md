@@ -6,9 +6,10 @@ This is the User Guide for NodeBB-F24-D-Buggers! This document will walk you thr
 
 ## Installation & Launch NodeBB Instance Locally
 To install the project and the new features, follow these steps:
-1. Clone the repository:
+1. Clone the repositories:
     ```bash
     git clone https://github.com/CMU-313/nodebb-f24-d-buggers.git
+    git clone https://github.com/CMU-313/nodebb-frontend-f24-d-buggers.git
     ```
 2. In the terminal, start the Redis server:
      ```bash
@@ -23,7 +24,12 @@ To install the project and the new features, follow these steps:
     ./nodebb setup
     ```
     *NOTE: if this line throws an error, you might have to delete `config.json` and run `redis-cli FLUSHDB` before rerunning this line.*
-5. Start NodeBB:
+5. Install the template & rebuild NodeBB instance
+    ```bash
+    npm install ../nodebb-frontend-f24-d-buggers
+    ./nodebb build tpl
+    ```
+6. Start NodeBB:
     ```bash
     ./nodebb start
     ```
