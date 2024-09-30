@@ -76,7 +76,7 @@ define('forum/topic/postTools', [
 	PostTools.toggle = function (pid, isDeleted) {
 		const postEl = components.get('post', 'pid', pid);
 
-		postEl.find('[component="post/quote"], [component="post/bookmark"], [component="post/reply"], [component="post/flag"], [component="user/chat"]')
+		postEl.find('[component="post/quote"], [component="post/bookmark"], [component="post/reply"], [component="post/flag"], [component="user/chat"],[component="post/endorse"]')
 			.toggleClass('hidden', isDeleted);
 
 		postEl.find('[component="post/delete"]').toggleClass('hidden', isDeleted).parent().attr('hidden', isDeleted ? '' : null);
@@ -109,6 +109,11 @@ define('forum/topic/postTools', [
 
 		postContainer.on('click', '[component="post/reply"]', function () {
 			onReplyClicked($(this), tid);
+		});
+
+		// Add endorse functionality
+		postContainer.on('click', '[component="post/endorse"]', function () {
+			return endorsePost($(this), getData($(this), 'data-pid'));
 		});
 
 		$('.topic').on('click', '[component="topic/reply"]', function (e) {
@@ -198,6 +203,20 @@ define('forum/topic/postTools', [
 				togglePostDelete($(this));
 			}
 		});
+
+		// Add post purge functionality
+		function endorsePost(button, pid) {
+			const method = button.attr('data-endorsed') === 'false' ? 'put' : 'del';
+	
+			api[method](`/posts/${pid}/endorse`, undefined, function (err) {
+				if (err) {
+					return alerts.error(err);
+				}
+				const type = method === 'put' ? 'endorse' : 'unendorse';
+				hooks.fire(`action:post.${type}`, { pid: pid });
+			});
+			return false;
+		}
 
 		function checkDuration(duration, postTimestamp, languageKey) {
 			if (!ajaxify.data.privileges.isAdminOrMod && duration && Date.now() - postTimestamp > duration * 1000) {
