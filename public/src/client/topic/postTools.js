@@ -204,19 +204,35 @@ define('forum/topic/postTools', [
 			}
 		});
 
-		// Add post purge functionality
 		function endorsePost(button, pid) {
 			const method = button.attr('data-endorsed') === 'false' ? 'put' : 'del';
-	
-			api[method](`/posts/${pid}/endorse`, undefined, function (err) {
-				if (err) {
-					return alerts.error(err);
-				}
-				const type = method === 'put' ? 'endorse' : 'unendorse';
-				hooks.fire(`action:post.${type}`, { pid: pid });
+		 
+			api[method](`/posts/${pid}/endorse`, undefined, function (err, result) {
+			   if (err) {
+				  return alerts.error(err);
+			   }
+		 
+			   const type = method === 'put' ? 'endorse' : 'unendorse';
+			   hooks.fire(`action:post.${type}`, { pid: pid });
+		 
+			   // Update the button UI to reflect the new state
+			   button.attr('data-endorsed', type === 'endorse');
+		 
+			   // Update the number of endorsements
+			   const countElement = button.find('.endorse-count');
+			   let endorsementCount = result.endorsements;
+		 
+			   if (type === 'endorse') {
+				  button.addClass('endorsed').text('Endorsed');
+				  countElement.text(endorsementCount);
+			   } else {
+				  button.removeClass('endorsed').text('Endorse');
+				  countElement.text(endorsementCount || '');
+			   }
 			});
 			return false;
-		}
+		 }
+		 
 
 		function checkDuration(duration, postTimestamp, languageKey) {
 			if (!ajaxify.data.privileges.isAdminOrMod && duration && Date.now() - postTimestamp > duration * 1000) {
