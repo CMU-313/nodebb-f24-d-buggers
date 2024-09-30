@@ -37,3 +37,32 @@ postsController.getRecentPosts = async function (req, res) {
 	const data = await posts.getRecentPosts(req.uid, start, stop, req.params.term);
 	res.json(data);
 };
+
+// Adding endorsePost function
+postsController.endorsePost = async function (req, res) {
+	const postId = req.params.pid;
+	const uid = req.uid;
+
+	if (!postId || !uid) {
+		return res.status(400).json({ error: 'Invalid request' });
+	}
+
+	try {
+		// Check if the user has already endorsed the post
+		const hasEndorsed = await db.isSetMember(`post:${postId}:endorsed`, uid);
+
+		if (hasEndorsed) {
+			// User is unendorsing the post
+			await db.setRemove(`post:${postId}:endorsed`, uid);
+			await db.decrObjectField(`post:${postId}`, 'endorsements');
+			res.status(200).json({ endorsed: false });
+		} else {
+			// User is endorsing the post
+			await db.setAdd(`post:${postId}:endorsed`, uid);
+			await db.incrObjectField(`post:${postId}`, 'endorsements');
+			res.status(200).json({ endorsed: true });
+		}
+	} catch (err) {
+		return res.status(500).json({ error: 'An error occurred while endorsing the post' });
+	}
+};
