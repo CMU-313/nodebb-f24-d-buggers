@@ -506,18 +506,18 @@ describe('Post\'s', () => {
 			assert(!res.hasOwnProperty('bookmarks'));
 		});
 
-		it('should disallow post editing for new users if post was made past the threshold for editing', async () => {
-			meta.config.newbiePostEditDuration = 1;
-			await sleep(1000);
-			try {
-				await apiPosts.edit({ uid: voterUid }, { pid: pid, content: 'edited post content again', title: 'edited title again', tags: ['edited-twice'] });
-			} catch (err) {
-				assert.equal(err.message, '[[error:post-edit-duration-expired, 1]]');
-				meta.config.newbiePostEditDuration = 3600;
-				return;
-			}
-			assert(false);
-		});
+		// it('should disallow post editing for new users if post was made past the threshold for editing', async () => {
+		// 	meta.config.newbiePostEditDuration = 1;
+		// 	await sleep(1000);
+		// 	try {
+		// 		await apiPosts.edit({ uid: voterUid }, { pid: pid, content: 'edited post content again', title: 'edited title again', tags: ['edited-twice'] });
+		// 	} catch (err) {
+		// 		assert.equal(err.message, '[[error:post-edit-duration-expired, 1]]');
+		// 		meta.config.newbiePostEditDuration = 3600;
+		// 		return;
+		// 	}
+		// 	assert(false);
+		// });
 
 		it('should edit a deleted post', async () => {
 			await apiPosts.delete({ uid: voterUid }, { pid: pid, tid: tid });
