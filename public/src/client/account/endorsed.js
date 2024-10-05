@@ -17,16 +17,20 @@ define('forum/account/endorsed', ['forum/account/header', 'forum/account/posts']
 		posts.handleInfiniteScroll('account/endorsed');
 	};
 
-	Endorsed.handleEndorse = function (postId) {
-		// Logic to handle endorsement, possibly involving API calls to mark a post as endorsed
-		socket.emit('plugins.endorse.post', { postId: postId }, function (err, result) {
-			if (err) {
-				app.alertError(err.message);
-			} else {
-				app.alertSuccess('Post successfully endorsed!');
-			}
-		});
-	};
+    Endorsed.handleEndorse = function (postId) {
+        console.log('Endorsing post with ID:', postId); // Log the post ID for debugging
+     
+        // Logic to handle endorsement, possibly involving API calls to mark a post as endorsed
+        socket.emit('plugins.endorse.post', { postId: postId }, function (err, result) {
+           if (err) {
+              console.error('Error endorsing post:', err); // Log error for debugging
+              return alerts.error('Error endorsing post: ' + err.message);
+           }
+     
+           app.alertSuccess('Post successfully endorsed!'); // Show success alert
+        });
+     };
+     
 
 	return Endorsed;
 });
