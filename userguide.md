@@ -23,7 +23,7 @@ To install the project and the new features, follow these steps:
     ```bash
     ./nodebb setup
     ```
-    *NOTE: if this line throws an error, you might have to delete `config.json` and run `redis-cli FLUSHDB` before rerunning this line.*
+    *NOTE: if this line throws an error, you might have to delete `config.json` and run `redis-cli FLUSHDB` before rerunning this line. Make sure that your redis server is running while you try to flush it.*
 5. Install the template & rebuild NodeBB instance
     ```bash
     npm install ../nodebb-frontend-f24-d-buggers
@@ -45,7 +45,9 @@ To install the project and the new features, follow these steps:
 2. Click on an existing topic, or create one if there is none
 3. Locate the three dots when hovering over the post & click on it
 4. Click on the Endorse button
-5. ...
+5. Click on an existing reply, or create one if there is none
+6. Locate the three dots & click on it
+7. Click on the Endorse Reply button
 
 ## User Testing [INCOMPLETE]
 
