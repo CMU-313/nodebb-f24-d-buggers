@@ -74,5 +74,5 @@ test.sh
 .docker/**
 !**/.gitkeep
 
-userguide.md
+
 dump.rdb
