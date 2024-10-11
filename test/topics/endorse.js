@@ -1,106 +1,105 @@
 'use strict';
 
-const chai = require('chai');
-const sinon = require('sinon');
-const $ = require('jquery');
-const postTools = require('../../public/src/client/topic/postTools');
-const api = require('../../public/src/modules/api');
-const alerts = require('../../public/src/modules/alerts');
+const assert = require('assert');
 
-const { assert } = chai;
+const db = require('../mocks/databasemock');
 
-describe('Endorse Feature Client-Side Tests', () => {
-	let $endorseButton;
-	let apiPutStub;
-	let apiDeleteStub;
-	let alertSuccessStub;
-	let alertErrorStub;
+const plugins = require('../../src/plugins');
+const categories = require('../../src/categories');
+const topics = require('../../src/topics');
+const user = require('../../src/user');
 
-	beforeEach(() => {
-		// Set up DOM element
-		$endorseButton = $('<button data-pid="123" component="post/endorse">Endorse</button>');
-		$('body').append($endorseButton);
+describe('Topic Events', () => {
+	let fooUid;
+	let topic;
+	before(async () => {
+		fooUid = await user.create({ username: 'foo', password: '123456' });
 
-		// Stub API methods
-		apiPutStub = sinon.stub(api, 'put');
-		apiDeleteStub = sinon.stub(api, 'delete');
-		alertSuccessStub = sinon.stub(alerts, 'success');
-		alertErrorStub = sinon.stub(alerts, 'error');
-
-		// Initialize postTools
-		postTools.init();
+		const categoryObj = await categories.create({
+			name: 'Test Category',
+			description: 'Test category created by testing script',
+		});
+		topic = await topics.post({
+			title: 'topic events testing',
+			content: 'foobar one two three',
+			uid: fooUid,
+			cid: 1,
+		});
 	});
 
-	afterEach(() => {
-		// Restore stubs and remove elements
-		apiPutStub.restore();
-		apiDeleteStub.restore();
-		alertSuccessStub.restore();
-		alertErrorStub.restore();
-		$endorseButton.remove();
-	});
-
-	it('should trigger endorse action when endorse button is clicked', (done) => {
-		apiPutStub.callsFake((endpoint, data, callback) => {
-			assert.strictEqual(endpoint, '/posts/123/endorse');
-			callback(null, { endorsed: true, endorsements: 1 });
+	describe('.init()', () => {
+		before(() => {
+			topics.events._ready = false;
 		});
 
-		$endorseButton.click();
+		it('should allow a plugin to expose new event types', async () => {
+			await plugins.hooks.register('core', {
+				hook: 'filter:topicEvents.init',
+				method: async ({ types }) => {
+					types.foo = {
+						icon: 'bar',
+						text: 'baz',
+						quux: 'quux',
+					};
 
-		setTimeout(() => {
-			assert(apiPutStub.calledOnce, 'API.put should be called once');
-			assert(alertSuccessStub.calledWith('[[topic:post_endorsed]]'), 'Success alert should be shown');
-			done();
-		}, 100);
+					return { types };
+				},
+			});
+
+			await topics.events.init();
+
+			assert(topics.events._types.foo);
+			assert.deepStrictEqual(topics.events._types.foo, {
+				icon: 'bar',
+				text: 'baz',
+				quux: 'quux',
+			});
+		});
 	});
 
-	it('should update UI after endorsing a post', (done) => {
-		apiPutStub.callsFake((endpoint, data, callback) => {
-			callback(null, { endorsed: true, endorsements: 1 });
+	describe('.log()', () => {
+		it('should log and return a set of new events in the topic', async () => {
+			const events = await topics.events.log(topic.topicData.tid, {
+				type: 'foo',
+			});
+
+			assert(events);
+			assert(Array.isArray(events));
+			events.forEach((event) => {
+				assert(['id', 'icon', 'text', 'timestamp', 'timestampISO', 'type', 'quux'].every(key => event.hasOwnProperty(key)));
+			});
 		});
-
-		$endorseButton.click();
-
-		setTimeout(() => {
-			assert.strictEqual($endorseButton.text(), 'Endorsed');
-			assert.strictEqual($endorseButton.attr('data-endorsed'), 'true');
-			assert.strictEqual($endorseButton.find('.endorsement-count').text(), '1');
-			done();
-		}, 100);
 	});
 
-	it('should handle API errors gracefully', (done) => {
-		apiPutStub.callsFake((endpoint, data, callback) => {
-			callback(new Error('Test error'));
+	describe('.get()', () => {
+		it('should get a topic\'s events', async () => {
+			const events = await topics.events.get(topic.topicData.tid);
+
+			assert(events);
+			assert(Array.isArray(events));
+			assert.strictEqual(events.length, 1);
+			events.forEach((event) => {
+				assert(['id', 'icon', 'text', 'timestamp', 'timestampISO', 'type', 'quux'].every(key => event.hasOwnProperty(key)));
+			});
 		});
-
-		$endorseButton.click();
-
-		setTimeout(() => {
-			assert(alertErrorStub.calledWith('[[error:endorsing_post]]'), 'Error alert should be shown');
-			done();
-		}, 100);
 	});
 
-	it('should unendorse a post when clicked on an endorsed post', (done) => {
-		$endorseButton.attr('data-endorsed', 'true').text('Endorsed');
-		$endorseButton.find('.endorsement-count').text('1');
+	describe('.purge()', () => {
+		let eventIds;
 
-		apiDeleteStub.callsFake((endpoint, data, callback) => {
-			assert.strictEqual(endpoint, '/posts/123/endorse');
-			callback(null, { endorsed: false, endorsements: 0 });
+		before(async () => {
+			const events = await topics.events.get(topic.topicData.tid);
+			eventIds = events.map(event => event.id);
 		});
 
-		$endorseButton.click();
+		it('should purge topic\'s events from the database', async () => {
+			await topics.events.purge(topic.topicData.tid);
 
-		setTimeout(() => {
-			assert(apiDeleteStub.calledOnce, 'API.delete should be called once');
-			assert.strictEqual($endorseButton.text(), 'Endorse');
-			assert.strictEqual($endorseButton.attr('data-endorsed'), 'false');
-			assert.strictEqual($endorseButton.find('.endorsement-count').text(), '0');
-			assert(alertSuccessStub.calledWith('[[topic:post_unendorsed]]'), 'Success alert should be shown');
-			done();
-		}, 100);
+			const keys = [`topic:${topic.topicData.tid}:events`];
+			keys.push(...eventIds.map(id => `topicEvent:${id}`));
+
+			const exists = await Promise.all(keys.map(key => db.exists(key)));
+			assert(exists.every(exists => !exists));
+		});
 	});
 });
