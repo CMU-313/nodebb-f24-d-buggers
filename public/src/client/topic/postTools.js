@@ -115,38 +115,38 @@ define('forum/topic/postTools', [
 		postContainer.on('click', '[component="post/endorse"]', function (event) {
 			event.preventDefault();
 			console.log('Endorse Post Container'); // Log to confirm button is clicked
-		
+
 			const pid = $(this).closest('[data-pid]').attr('data-pid'); // Get post ID
 			if (!pid) {
 				console.error('No post ID found');
 				return;
 			}
-		
+
 			endorsePost($(this), pid);
 		});
-		
+
 		function endorsePost(button, pid) {
 			console.log('Endorsing post with ID:', pid);
-		
+
 			// Emit socket event to endorse the post
 			socket.emit('plugins.endorse.post', { postId: pid }, function (err, result) {
 				if (err) {
-					return console.error('Error endorsing post: ' + err.message)
+					return console.error('Error endorsing post: ' + err.message);
 				}
-		
+
 				// Success: Update the button text and endorsement count
 				button.text('Endorsed').addClass('endorsed');
-				
+
 				// Optionally update the endorsement count (assuming result contains the count)
 				const countElement = button.find('.endorse-count');
 				if (countElement.length && result.endorsements) {
 					countElement.text(result.endorsements);
 				}
-		
+
 				app.alertSuccess('Post successfully endorsed!');
 			});
 		}
-		
+
 
 		$('.topic').on('click', '[component="topic/reply"]', function (e) {
 			e.preventDefault();
@@ -238,43 +238,6 @@ define('forum/topic/postTools', [
 			}
 		});
 
-		function endorsePost(button, pid) {
-			console.log('Endorse button clicked'); // Add this to check if the function is firing
-			console.log('API Method: ', method); // Log the method (PUT or DELETE)
-		  
-			const method = button.attr('data-endorsed') === 'false' ? 'put' : 'del';
-		  
-			// Emit socket event or make API call
-			api[method](`/posts/${pid}/endorse`, undefined, function (err, result) {
-			  if (err) {
-				console.error('Error:', err); // Log errors if any
-				return alerts.error(err);
-			  }
-		  
-			  console.log('Endorse button post API', result); // Log the response
-			  
-			  const type = method === 'put' ? 'endorse' : 'unendorse';
-			  hooks.fire(`action:post.${type}`, { pid: pid });
-		  
-			  // Update the button UI to reflect the new state
-			  button.attr('data-endorsed', type === 'endorse');
-		  
-			  const countElement = button.find('.endorse-count');
-			  let endorsementCount = result.endorsements;
-		  
-			  if (type === 'endorse') {
-				button.addClass('endorsed').text('Endorsed');
-				countElement.text(endorsementCount);
-			  } else {
-				button.removeClass('endorsed').text('Endorse');
-				countElement.text(endorsementCount || '');
-			  }
-			});
-			return false;
-		  }
-		  
-		
-		 
 
 		function checkDuration(duration, postTimestamp, languageKey) {
 			if (!ajaxify.data.privileges.isAdminOrMod && duration && Date.now() - postTimestamp > duration * 1000) {

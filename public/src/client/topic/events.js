@@ -191,7 +191,7 @@ define('forum/topic/events', [
 
 	function onPostEndorsed(data) {
 		const postEl = $('[data-pid="' + data.postId + '"]');
-		postEl.addClass('endorsed'); 
+		postEl.addClass('endorsed');
 	}
 
 	function togglePostDeleteState(data) {
