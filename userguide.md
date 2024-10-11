@@ -38,49 +38,22 @@ To install the project and the new features, follow these steps:
 
 ### Features Overview
 - **Q&A Category**: A dedicated space for students to ask questions and have them categorized into relevant subcategories (Projects, Exams, Lectures, etc.)
-- **Endorse Button(s)**: A way for instructors and TAs to approve a student's answer, so it gives more credibility to the answer for those who checks the topic later.
-- **Edit Feature**: A way for users to edit their own topics/replies even after an hour since publishing, this feature allows users to update their posts without having to crowd the screen with replies and helps to limit the overall cognitive load placed on viewers.
+- **Endorse Button**: A way for instructors and TAs to approve a student's answer, so it gives more credibility to the answer for those who checks the topic later.
 
+### Step-by-Step Instructions [INCOMPLETE]
+1. Click on the "Questions & Answers" category
+2. Click on an existing topic, or create one if there is none
+3. Locate the three dots when hovering over the post & click on it
+4. Click on the Endorse button
+5. Click on an existing reply, or create one if there is none
+6. Locate the three dots & click on it
+7. Click on the Endorse Reply button
 
 ## User Testing [INCOMPLETE]
 
 ### Testing Instructions
-To ensure the new feature works as intended, follow these steps to test (ensure 
-that you are logged in to NodeBB with your user credentials first):
-
-**Q&A Category**:
-The goal of this testing procedure is to ensure that you, as the user, are not only 
-able to access the "Questions & Answers" category, but are also able to author 
-topics/posts/replies that persist.
-1. Click on the "Questions & Answers" category
-2. Click on any subcategory within the Q&A category
-3. Post a new topic and reply to it
-4. Exit the subcategory entirely
-5. Return to the previous subcategory to ensure that your posts persist
-
-**Endorse Button(s)**:
-The goal of this testing procedure is to ensure that you, as the TA/instructor, 
-are able to endorse both topics/posts and replies as you see fit, and that these 
-changes persist.
-1. Click on any category
-2. Click on an existing topic, or create one if there is none
-3. Locate the three dots when hovering over the post & click on them
-4. Click on the "Endorse" button to endorse the topic
-5. Click on an existing reply, or create one if there is none
-6. Locate the three dots & click on them
-7. Click on the "Endorse" button to endorse the reply
-8. Exit the topic entirely
-9. Return to the topic to ensure that your endorsement(s) persist
-
-**Edit Feature**:
-The goal of this testing procedure is to ensure that you, as the user, are able to
-edit your topics/posts/replies even after an hour has passed since publishing, and 
-that these changes persist.
-1. Click on the "General Discussion" category
-2. Click on the "Welcome to your NodeBB!" message
-3. Locate the three dots when hovering over the post & click on them
-4. Click on the "Edit" button to edit the post
-5. Edit the content of the post & click submit
-6. Exit the welcome message entirely
-7. Return to the welcome message to ensure that your edits persist
-
+To ensure the new feature works as intended, follow these steps to test:
+1. [Describe a specific scenario]
+   - Expected Outcome: [What should happen when the feature works as intended]
+2. [Describe another scenario]
+   - Expected Outcome: [What should happen in this case]
