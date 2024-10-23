@@ -41,7 +41,12 @@ To install the project and the new features, follow these steps:
 - **Endorse Button(s)**: A way for instructors and TAs to approve a student's answer, so it gives more credibility to the answer for those who checks the topic later.
 - **Edit Feature**: A way for users to edit their own topics/replies even after an hour since publishing, this feature allows users to update their posts without having to crowd the screen with replies and helps to limit the overall cognitive load placed on viewers.
 
+<<<<<<< HEAD
+
+## User Testing 
+=======
 ### User Testing
+>>>>>>> f24
 
 ### Testing Instructions
 
@@ -51,6 +56,10 @@ To ensure the new features work as intended, follow these testing procedures. Ma
 
 #### **Q&A Category**
 
+<<<<<<< HEAD
+
+
+=======
 **Objective**: Verify that users can access the "Questions & Answers" category, create topics and replies, and that these posts persist correctly.
 
 **Steps**:
@@ -244,3 +253,4 @@ You can provide feedback by:
 - **Contacting the Development Team**: Reach out via email or the project's communication channels.
 
 Your contributions help ensure the success and reliability of the project. Thank you for your participation!
+>>>>>>> f24
