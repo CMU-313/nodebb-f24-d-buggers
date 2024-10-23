@@ -42,7 +42,7 @@ To install the project and the new features, follow these steps:
 - **Edit Feature**: A way for users to edit their own topics/replies even after an hour since publishing, this feature allows users to update their posts without having to crowd the screen with replies and helps to limit the overall cognitive load placed on viewers.
 
 
-## User Testing [INCOMPLETE]
+## User Testing 
 
 ### Testing Instructions
 To ensure the new feature works as intended, follow these steps to test (ensure 
@@ -83,4 +83,6 @@ that these changes persist.
 5. Edit the content of the post & click submit
 6. Exit the welcome message entirely
 7. Return to the welcome message to ensure that your edits persist
+
+
 
