@@ -31,6 +31,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: 'cmu-313/nodebb-frontend-f24-d-buggers'
+          path: './custom-theme'
 
       - name: Set up Node.js version
         uses: actions/setup-node@v3
@@ -39,7 +40,8 @@ jobs:
 
       - name: Install Theme Dependencies
         run: |
-          npm install --force
+          npm install --force ./custom-theme
+          ./nodebb build tpl
 
       - name: Set up NodeBB
         run: |
@@ -53,10 +55,6 @@ jobs:
             "redis:port": "6379",
             "redis:password": "${{ secrets.REDIS_PASSWORD }}" }'
 
-      - name: Build NodeBB Templates
-        run: |
-          ./nodebb build tpl
-          
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
