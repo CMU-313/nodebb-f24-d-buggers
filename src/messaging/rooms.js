@@ -3,6 +3,7 @@
 const _ = require('lodash');
 const validator = require('validator');
 const winston = require('winston');
+const Iroh = require('iroh');
 
 const db = require('../database');
 const user = require('../user');
@@ -13,7 +14,6 @@ const meta = require('../meta');
 const io = require('../socket.io');
 const cache = require('../cache');
 const cacheCreate = require('../cacheCreate');
-const Iroh = require('iroh');
 
 const roomUidCache = cacheCreate({
 	name: 'chat:room:uids',
@@ -80,56 +80,61 @@ module.exports = function (Messaging) {
 			checkRoomName(data.roomName);
 		}
 
-		console.log("testing dynamic testing tool: iroh\n");
-		console.log("example 1: checking if statement\n");
+		console.log('testing dynamic testing tool: iroh\n');
+		console.log('example 1: checking if statement\n');
 
-		let code = 
-			`if (Array.isArray(data)) { // old usage second param used to be toUids
+		const code = `if (Array.isArray(data)) { // old usage second param used to be toUids
 			data = { uids: data };
 			}
 			if (data.hasOwnProperty('roomName')) {
 				checkRoomName(data.roomName);
 			}`;
 
-		let stage = new Iroh.Stage(code);
+		const stage = new Iroh.Stage(code);
 
 		// while, for etc.
 		stage.addListener(Iroh.LOOP)
-		.on("enter", function(e) {
-		// when we enter the loop
-		console.log(" ".repeat(e.indent) + "loop enter");
-		})
-		.on("leave", function(e) {
-		// when we leave the loop
-		console.log(" ".repeat(e.indent) + "loop leave");
-		});
+			.on('enter', (e) => {
+				// when we enter the loop
+				const temp = ' '.repeat(e.indent);
+				console.log(`${temp}loop enter`);
+			})
+			.on('leave', (e) => {
+				// when we leave the loop
+				const temp = ' '.repeat(e.indent);
+				console.log(`${temp}loop leave`);
+			});
 
 		// if, else if
 		stage.addListener(Iroh.IF)
-		.on("enter", function(e) {
-		// when we enter the if
-		console.log(" ".repeat(e.indent) + "if enter");
-		})
-		.on("leave", function(e) {
-		// when we leave the if
-		console.log(" ".repeat(e.indent) + "if leave");
-		});
+			.on('enter', (e) => {
+				// when we enter the if
+				const temp = ' '.repeat(e.indent);
+				console.log(`${temp}if enter`);
+			})
+			.on('leave', (e) => {
+				// when we leave the if
+				const temp = ' '.repeat(e.indent);
+				console.log(`${temp}if leave`);
+			});
 
 		// program
 		stage.addListener(Iroh.PROGRAM)
-		.on("enter", (e) => {
-		console.log(" ".repeat(e.indent) + "Program");
-		})
-		.on("leave", (e) => {
-		console.log(" ".repeat(e.indent) + "Program end", "->", e.return);
-		});
+			.on('enter', (e) => {
+				const temp = ' '.repeat(e.indent);
+				console.log(`${temp}Program`);
+			})
+			.on('leave', (e) => {
+				const temp = ' '.repeat(e.indent);
+				const temp2 = e.return;
+				console.log(`${temp}Program end -> ${temp2}`);
+			});
 
-		eval(stage.script);
+		this.eval(stage.script);
 
-		console.log("\n\nexample 2: testing function checkroomname\n");
+		console.log('\n\nexample 2: testing function checkroomname\n');
 
-		let code2 = 
-			`function checkRoomName(roomName) {
+		const code2 = `function checkRoomName(roomName) {
 				if (!roomName && roomName !== '') {
 					throw new Error('[[error:invalid-room-name]]');
 				}
@@ -138,40 +143,47 @@ module.exports = function (Messaging) {
 				}
 			}`;
 
-		let stage2 = new Iroh.Stage(code2);
+		const stage2 = new Iroh.Stage(code2);
 
 		// while, for etc.
 		stage2.addListener(Iroh.LOOP)
-		.on("enter", function(e) {
-		// when we enter the loop
-		console.log(" ".repeat(e.indent) + "loop enter");
-		})
-		.on("leave", function(e) {
-		// when we leave the loop
-		console.log(" ".repeat(e.indent) + "loop leave");
-		});
+			.on('enter', (e) => {
+				// when we enter the loop
+				const temp = ' '.repeat(e.indent);
+				console.log(`${temp}loop enter`);
+			})
+			.on('leave', (e) => {
+				// when we leave the loop
+				const temp = ' '.repeat(e.indent);
+				console.log(`${temp}loop leave`);
+			});
 
 		// if, else if
 		stage2.addListener(Iroh.IF)
-		.on("enter", function(e) {
-		// when we enter the if
-		console.log(" ".repeat(e.indent) + "if enter");
-		})
-		.on("leave", function(e) {
-		// when we leave the if
-		console.log(" ".repeat(e.indent) + "if leave");
-		});
+			.on('enter', (e) => {
+				// when we enter the if
+				const temp = ' '.repeat(e.indent);
+				console.log(`${temp}if enter`);
+			})
+			.on('leave', (e) => {
+				// when we leave the if
+				const temp = ' '.repeat(e.indent);
+				console.log(`${temp}if leave`);
+			});
 
 		// program
 		stage2.addListener(Iroh.PROGRAM)
-		.on("enter", (e) => {
-		console.log(" ".repeat(e.indent) + "Program");
-		})
-		.on("leave", (e) => {
-		console.log(" ".repeat(e.indent) + "Program end", "->", e.return);
-		});
+			.on('enter', (e) => {
+				const temp = ' '.repeat(e.indent);
+				console.log(`${temp}Program`);
+			})
+			.on('leave', (e) => {
+				const temp = ' '.repeat(e.indent);
+				const temp2 = e.return;
+				console.log(`${temp}Program end -> ${temp2}`);
+			});
 
-		eval(stage2.script);
+		this.eval(stage2.script);
 
 		const now = Date.now();
 		const roomId = await db.incrObjectField('global', 'nextChatRoomId');
