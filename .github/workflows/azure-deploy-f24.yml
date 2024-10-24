@@ -40,6 +40,7 @@ jobs:
 
       - name: Install Theme Dependencies
         run: |
+          npm install --force
           npm install --force ./custom-theme
           ./nodebb build tpl
 
