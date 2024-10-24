@@ -39,7 +39,7 @@ jobs:
             "admin:username": "admin",
             "admin:password": "${{ secrets.ADMIN_PASSWORD }}",
             "admin:password:confirm": "${{ secrets.ADMIN_PASSWORD }}",
-            "admin:email": "rohanpadhye@cmu.edu",
+            "admin:email": "bcondemi@cmu.edu",
             "database": "redis",
             "redis:host": "${{ secrets.REDIS_HOST }}",
             "redis:port": "6379",
