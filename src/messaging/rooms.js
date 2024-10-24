@@ -3,6 +3,7 @@
 const _ = require('lodash');
 const validator = require('validator');
 const winston = require('winston');
+const Iroh = require('iroh');
 
 const db = require('../database');
 const user = require('../user');
@@ -78,6 +79,57 @@ module.exports = function (Messaging) {
 		if (data.hasOwnProperty('roomName')) {
 			checkRoomName(data.roomName);
 		}
+
+		console.log('testing dynamic testing tool: iroh\n');
+
+		const code = `if (Array.isArray(data)) { // old usage second param used to be toUids
+			data = { uids: data };
+		}
+		if (data.hasOwnProperty('roomName')) {
+			checkRoomName(data.roomName);
+		}`;
+
+		const stage = new Iroh.Stage(code);
+
+		// while, for etc.
+		stage.addListener(Iroh.LOOP)
+			.on('enter', (e) => {
+				// when we enter the loop
+				const temp = ' '.repeat(e.indent);
+				console.log(`${temp}loop enter`);
+			})
+			.on('leave', (e) => {
+				// when we leave the loop
+				const temp = ' '.repeat(e.indent);
+				console.log(`${temp}loop leave`);
+			});
+
+		// if, else if
+		stage.addListener(Iroh.IF)
+			.on('enter', (e) => {
+				// when we enter the if
+				const temp = ' '.repeat(e.indent);
+				console.log(`${temp}if enter`);
+			})
+			.on('leave', (e) => {
+				// when we leave the if
+				const temp = ' '.repeat(e.indent);
+				console.log(`${temp}if leave`);
+			});
+
+		// program
+		stage.addListener(Iroh.PROGRAM)
+			.on('enter', (e) => {
+				const temp = ' '.repeat(e.indent);
+				console.log(`${temp}Program`);
+			})
+			.on('leave', (e) => {
+				const temp = ' '.repeat(e.indent);
+				const temp2 = e.return;
+				console.log(`${temp}Program end -> ${temp2}`);
+			});
+
+		eval(stage.script);
 
 		const now = Date.now();
 		const roomId = await db.incrObjectField('global', 'nextChatRoomId');
