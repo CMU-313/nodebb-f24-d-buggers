@@ -27,22 +27,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Checkout Theme Repository
-        uses: actions/checkout@v4
-        with:
-          repository: 'cmu-313/nodebb-frontend-f24-d-buggers'
-          path: './custom-theme'
-
       - name: Set up Node.js version
         uses: actions/setup-node@v3
         with:
           node-version: '20.17.0'
 
-      - name: Install Theme Dependencies
-        run: |
-          npm install --force
-          npm install --force ./custom-theme
-          ./nodebb build tpl
 
       - name: Set up NodeBB
         run: |
@@ -55,6 +44,10 @@ jobs:
             "redis:host": "${{ secrets.REDIS_HOST }}",
             "redis:port": "6379",
             "redis:password": "${{ secrets.REDIS_PASSWORD }}" }'
+
+      - name: Load and install external frontend repo
+        run: |
+          npm install https://github.com/CMU-313/nodebb-frontend-f24-d-buggers.git
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
