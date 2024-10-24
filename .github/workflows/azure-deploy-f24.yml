@@ -37,7 +37,7 @@ jobs:
 
       - name: Install Theme Dependencies
         run: |
-          npm install
+          npm install --force
 
       - name: Set up NodeBB
         run: |
