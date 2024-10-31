@@ -3,9 +3,7 @@ name: DeepScan Static Analysis
 on:
   push:
     branches: [ "**" ]
-    branches: [ "**" ]
   pull_request:
-    branches: [ "**" ]
     branches: [ "**" ]
 
 jobs:
