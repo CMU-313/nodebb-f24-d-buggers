@@ -4,26 +4,10 @@
 name: Build and deploy Node.js app to Azure Web App - nodebb-f24
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - f24
-  pull_request:
-    branches:
-      - f24
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14'
-    - run: npm install
-    - run: npm test
+  workflow_dispatch:
     
 concurrency:
   group: ${{ github.workflow }}
@@ -34,9 +18,19 @@ jobs:
     uses:
       ./.github/workflows/test.yaml
 
+  deepscan: 
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: DeepScan
+        uses: deepscan/deepscan-action@v1
+        with:
+          token: ${{ secrets.DEEPSCAN_API_KEY }}
+          fail-on-error: true
+
   build-and-deploy:
     if: github.repository == 'cmu-313/nodebb-f24-d-buggers'
-    needs: lint-and-test
+    needs: [lint-and-test, deepscan]
 
     runs-on: ubuntu-latest
 
@@ -48,7 +42,7 @@ jobs:
         with:
           node-version: '20.17.0'
 
-
+    
       - name: Set up NodeBB
         run: |
           ./nodebb setup '{"url":"https://nodebb-d-buggers.azurewebsites.net:443",
@@ -64,6 +58,9 @@ jobs:
       - name: Load and install external frontend repo
         run: |
           npm install https://github.com/CMU-313/nodebb-frontend-f24-d-buggers.git
+
+      - name: Rebuild NodeBB
+        run: ./nodebb build
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
