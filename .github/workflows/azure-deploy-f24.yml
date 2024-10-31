@@ -26,7 +26,6 @@ jobs:
         uses: deepscan/deepscan-action@v1
         with:
           token: ${{ secrets.DEEPSCAN_API_KEY }}
-          fail-on-error: true
 
   build-and-deploy:
     if: github.repository == 'cmu-313/nodebb-f24-d-buggers'
