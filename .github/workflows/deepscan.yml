@@ -17,12 +17,10 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18.x'  # Adjust to your project's Node.js version
-
-      - name: Install Dependencies
-        run: npm install
+          node-version: '22.x'
 
       - name: Run DeepScan
         uses: DeepScan/gh-action@v1
         with:
-          api_key: ${{ secrets.DEEPSCAN_API_KEY }}
+          token: ${{ secrets.DEEPSCAN_API_KEY }}
+          project: nodebb-f24-d-buggers
