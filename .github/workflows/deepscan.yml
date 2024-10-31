@@ -2,9 +2,9 @@ name: DeepScan Static Analysis
 
 on:
   push:
-    branches: [ "**" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "**" ]
+    branches: [ main ]
 
 jobs:
   deepscan:
@@ -12,21 +12,15 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "20.17.0"
-
-      - name: Install Dependencies
-        run: npm install
-
-      - name: Install DeepScan CLI
-        run: npm install -g deepscan
+          node-version: '22.x'
 
       - name: Run DeepScan
-        env:
-          DEEPSCAN_TOKEN: ${{ secrets.DEEPSCAN_API_KEY }}
-        run: |
-          deepscan --project nodebb-f24-d-buggers --analyze .
+        uses: DeepScan/gh-action@v1
+        with:
+          token: ${{ secrets.DEEPSCAN_API_KEY }}
+          project: nodebb-f24-d-buggers
