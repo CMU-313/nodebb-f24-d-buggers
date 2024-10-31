@@ -8,7 +8,7 @@ on:
     branches:
       - f24
   workflow_dispatch:
-    
+
 concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: true
@@ -19,9 +19,8 @@ jobs:
       ./.github/workflows/test.yaml
 
   build-and-deploy:
-    if: github.repository == 'cmu-313/nodebb-f24-d-buggers'
+    if: github.repository == 'CMU-313/nodebb-f24-d-buggers'
     needs: lint-and-test
-
     runs-on: ubuntu-latest
 
     steps:
@@ -32,6 +31,8 @@ jobs:
         with:
           node-version: '20.17.0'
 
+      - name: Install Dependencies
+        run: npm install
 
       - name: Set up NodeBB
         run: |
@@ -49,6 +50,40 @@ jobs:
         run: |
           npm install https://github.com/CMU-313/nodebb-frontend-f24-d-buggers.git
 
+      - name: Build NodeBB
+        run: npm run build
+
+      - name: Prepare deployment package
+        run: |
+          mkdir deploy
+          cp -r build/* deploy/
+          cp package.json deploy/
+          cp package-lock.json deploy/
+
+      - name: Create ZIP package
+        run: |
+          cd deploy
+          zip -r ../deploy.zip ./*
+
+      - name: Clean and prepare for production
+        run: |
+          rm -rf node_modules
+          npm cache clean --force
+          npm install --production
+
+      - name: Set App Settings
+        uses: Azure/appservice-settings@v2
+        with:
+          app-name: 'nodebb-d-buggers'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_114CAAE57AF4486D9FDF1ED38DBB21FD }}
+          app-settings-json: |
+            [
+              {
+                "name": "SCM_DO_BUILD_DURING_DEPLOYMENT",
+                "value": "true"
+              }
+            ]
+
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
@@ -56,7 +91,7 @@ jobs:
           app-name: 'nodebb-d-buggers'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_114CAAE57AF4486D9FDF1ED38DBB21FD }}
+
           package: .
           
-          
-
+ 

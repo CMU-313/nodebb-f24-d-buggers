@@ -1,0 +1,26 @@
+name: DeepScan Static Analysis
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  deepscan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22.x'
+
+      - name: Run DeepScan
+        uses: DeepScan/gh-action@v1
+        with:
+          token: ${{ secrets.DEEPSCAN_API_KEY }}
+          project: nodebb-f24-d-buggers
