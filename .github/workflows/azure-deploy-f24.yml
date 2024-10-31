@@ -35,6 +35,9 @@ jobs:
       - name: Load and install external frontend repo
         run: |
           npm install https://github.com/CMU-313/nodebb-frontend-f24-d-buggers.git
+
+      - name: Rebuild NodeBB
+        run: ./nodebb build
           
       - name: Set up NodeBB
         run: |
