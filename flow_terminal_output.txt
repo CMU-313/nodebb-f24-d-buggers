@@ -1,0 +1,34 @@
+root@LAPTOP-7DI3SFMR:~/17-313/project2/nodebb-f24-d-buggers# git
+ checkout -b bc/flow2.0
+Switched to a new branch 'bc/flow2.0'
+
+root@LAPTOP-7DI3SFMR:~/17-313/project2/nodebb-f24-d-buggers# ./node_modules/.bin/babel src/ -d lib/
+Successfully compiled 548 files with Babel (16352ms).
+
+root@LAPTOP-7DI3SFMR:~/17-313/project2/nodebb-f24-d-buggers# npm run lint
+
+> nodebb@3.8.4 lint
+> eslint --cache ./nodebb .
+
+root@LAPTOP-7DI3SFMR:~/17-313/project2/nodebb-f24-d-buggers# npm run flow init
+
+> nodebb@3.8.4 flow
+> flow init
+
+root@LAPTOP-7DI3SFMR:~/17-313/project2/nodebb-f24-d-buggers# npm run flow
+
+> nodebb@3.8.4 flow
+> flow
+
+Launching Flow server for /root/17-313/project2/nodebb-f24-d-buggers
+Spawned flow server (pid=228372)
+Logs will go to /tmp/flow/zSrootzS17-313zSproject2zSnodebb-f24-d-buggers.log
+Monitor logs will go to /tmp/flow/zSrootzS17-313zSproject2zSnodebb-f24-d-buggers.monitor_log
+Please wait. Server is initializing (indexing files 0/148 (0.0%)
+Please wait. Server is initializing (indexing files (post-proces
+Please wait. Server is initializing (calculating dependencies): 
+Please wait. Server is initializing (merged module interfaces 0/
+Please wait. Server is initializing (checked files 1/12 (8.3%)):
+Please wait. Server is initializing (checked files 8/12 (66.7%))
+Please wait. Server is initializing (checked files 11/12 (91.7%)
+No errors!
