@@ -19,6 +19,9 @@ jobs:
         with:
           node-version: '20.17.0'
 
+      - name: Copy package.json
+        run: cp install/package.json package.json
+
       - name: Install Dependencies
         run: npm install
 
