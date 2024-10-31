@@ -71,19 +71,6 @@ jobs:
           npm cache clean --force
           npm install --production
 
-      - name: Set App Settings
-        uses: azure/app-service-settings@v1
-        with:
-          app-name: 'nodebb-d-buggers'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_114CAAE57AF4486D9FDF1ED38DBB21FD }}
-          app-settings-json: |
-            [
-              {
-                "name": "SCM_DO_BUILD_DURING_DEPLOYMENT",
-                "value": "true"
-              }
-            ]
-
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
