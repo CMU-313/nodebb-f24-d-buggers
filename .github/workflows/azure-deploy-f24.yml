@@ -32,6 +32,15 @@ jobs:
         with:
           node-version: '20.17.0'
 
+      - name: Install Flow
+        run: npm install --global flow-bin
+      
+      - name: Initialize Flow
+        run: flow init
+
+      - name: Run Flow
+        run: flow
+
       - name: Set up NodeBB
         run: |
           ./nodebb setup '{"url":"https://nodebb-d-buggers.azurewebsites.net:443",
