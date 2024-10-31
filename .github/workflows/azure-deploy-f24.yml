@@ -55,6 +55,7 @@ jobs:
           npx flow init
           npx flow
             
+
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
@@ -63,5 +64,4 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_114CAAE57AF4486D9FDF1ED38DBB21FD }}
           package: .
-          
           
