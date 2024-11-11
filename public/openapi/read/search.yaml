@@ -91,6 +91,11 @@ get:
                         type: boolean
                       search:tags:
                         type: boolean
+                    isEnglish:
+                      type: boolean
+                      description: Indicator about whether the text is English or not
+                      default: false
+                      nullable: true
                 required:
                   - posts
                   - matchCount
@@ -98,14 +103,12 @@ get:
                   - time
                   - multiplePages
                   - search_query
-                  - allCategories
-                  - allCategoriesCount
-                  - expandSearch
                   - showAsPosts
                   - showAsTopics
                   - title
                   - searchDefaultSortBy
-                  - permissions
+                  - privileges
+                  - isEnglish
               - $ref: ../components/schemas/Pagination.yaml#/Pagination
               - $ref: ../components/schemas/Breadcrumbs.yaml#/Breadcrumbs
               - $ref: ../components/schemas/CommonProps.yaml#/CommonProps
