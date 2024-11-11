@@ -9,3 +9,4 @@ translatorApi.translate = async function (postData) {
     const data = await response.json();
     return [data.is_english, data.translated_content];
 };
+
