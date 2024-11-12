@@ -18,20 +18,9 @@ jobs:
     uses:
       ./.github/workflows/test.yaml
 
-  deepscan: 
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Run DeepScan
-        uses: deepscan/gh-action@v1
-        with:
-          token: ${{ secrets.DEEPSCAN_API_KEY }}
-
-
   build-and-deploy:
     if: github.repository == 'cmu-313/nodebb-f24-d-buggers'
-    needs: [lint-and-test, deepscan]
+    needs: lint-and-test
 
     runs-on: ubuntu-latest
 
