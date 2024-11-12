@@ -61,6 +61,15 @@ get:
                           description: A topic identifier
                         content:
                           type: string
+                        translatedContent: 
+                          type: string
+                          description: Translated text, if applicable
+                          nullable: true
+                        isEnglish:
+                          type: boolean
+                          description: Indicator about whether the text is English or not
+                          default: false
+                          nullable: true
                         timestamp:
                           type: number
                         votes:

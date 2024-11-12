@@ -77,6 +77,11 @@ get:
                                               type: number
                                             content:
                                               type: string
+                                            isEnglish:
+                                              type: boolean
+                                              description: Indicator about whether the text is English or not
+                                              default: false
+                                              nullable: true
                                             timestampISO:
                                               type: string
                                               description: An ISO 8601 formatted date string (complementing `timestamp`)
@@ -144,6 +149,11 @@ get:
                                     type: number
                                   content:
                                     type: string
+                                  isEnglish:
+                                    type: boolean
+                                    description: Indicator about whether the text is English or not
+                                    default: false
+                                    nullable: true
                                   timestampISO:
                                     type: string
                                     description: An ISO 8601 formatted date string (complementing `timestamp`)
