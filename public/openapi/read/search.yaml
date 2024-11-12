@@ -91,11 +91,11 @@ get:
                         type: boolean
                       search:tags:
                         type: boolean
-                    isEnglish:
-                      type: boolean
-                      description: Indicator about whether the text is English or not
-                      default: false
-                      nullable: true
+                  isEnglish:
+                    type: boolean
+                    description: Indicator about whether the text is English or not
+                    default: false
+                    nullable: true
                 required:
                   - posts
                   - matchCount
