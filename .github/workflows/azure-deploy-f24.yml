@@ -58,7 +58,7 @@ jobs:
         with:
           app-name: 'nodebb-d-buggers'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_114CAAE57AF4486D9FDF1ED38DBB21FD }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_68CD467DC12342EF84ED857FDA056E85 }}
           package: .
           
 
